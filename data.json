@@ -1,5 +1,32 @@
 [
-  { "title": "Fahrtenplan", "content": "Diese Woche Plan A." },
-  { "title": "Staplerschein", "content": "Freitag, 14 Uhr Staplerschulung in VOH." },
-  { "title": "TEST TEST", "content": "TEST TEST Das ist ein Test." }
+  {
+    "title": "Flohmarkt",
+    "content": "Am Samstag ab 9 Uhr im Pausenhof. Jeder kann mitmachen.",
+    "date": "28.07.2025"
+  },
+  {
+    "title": "Neue Öffnungszeiten",
+    "content": "Ab Montag ist das Sekretariat nur noch bis 13 Uhr besetzt.",
+    "date": "27.07.2025"
+  },
+  {
+    "title": "Fundsachen",
+    "content": "Turnbeutel, Schlüssel und eine Brille wurden abgegeben.",
+    "date": "26.07.2025"
+  },
+  {
+    "title": "Küchenhilfe gesucht",
+    "content": "Teilzeitstelle im Hauswirtschaftsbereich, Bewerbung im Büro.",
+    "date": "25.07.2025"
+  },
+  {
+    "title": "Büro geschlossen",
+    "content": "Am Freitag bleibt das Büro krankheitsbedingt zu.",
+    "date": "24.07.2025"
+  },
+  {
+    "title": "Feueralarmübung",
+    "content": "Nächsten Dienstag um 10:00 Uhr – bitte nicht erschrecken.",
+    "date": "23.07.2025"
+  }
 ]

@@ -2,12 +2,34 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Schwarzes Brett</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Digitales Schwarzes Brett</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fichte: '#2f4f4f',
+            lime: '#a3e635'
+          }
+        }
+      }
+    };
+  </script>
 </head>
-<body>
-  <h1>Digitales Schwarzes Brett</h1>
-  <div id="board"></div>
+<body class="bg-white min-h-screen p-6 font-sans">
+    <header class="flex items-center mb-8">
+        <img src="img/logo.png" alt="Logo" class="h-12 w-auto mr-4" />
+        <h1 class="text-3xl font-extrabold text-fichte text-center">Schwarzes Brett</h1>
+    </header>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl mx-auto">
+      <div id="important" class="flex flex-col gap-6 col-span-1 md:col-span-1"></div>
+      <div id="board" class="flex flex-col gap-6 md:col-span-2"></div>
+    </div>
+
+
   <script src="app.js"></script>
 </body>
 </html>
