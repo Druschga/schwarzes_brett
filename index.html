@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digitales Schwarzes Brett</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -9,62 +10,144 @@
       theme: {
         extend: {
           colors: {
-            fichte: '#2f4f4f',
-            lime: '#a3e635'
-          }
-        }
-      }
+            schwarzgreen: '#006838', // Primärfarbe laut Screenshot
+            schwarzlime: '#C6F100',  // Helles Grün
+            schwarzgray: '#f5f5f5',
+          },
+          fontFamily: {
+            sans: ['Arial', 'sans-serif'],
+          },
+        },
+      },
     };
   </script>
 </head>
-<body class="bg-white min-h-screen p-6 font-sans">
-    <header class="flex items-center mb-8">
-        <img src="img/logo.png" alt="Logo" class="h-12 w-auto mr-4" />
-        <h1 class="text-3xl font-extrabold text-fichte text-center">Schwarzes Brett</h1>
-    </header>
+<body class="bg-schwarzgray min-h-screen font-sans text-black">
 
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl mx-auto">
-      <div id="important" class="flex flex-col gap-6 col-span-1 md:col-span-1"></div>
-      <div id="board" class="flex flex-col gap-6 md:col-span-2"></div>
+  <!-- Header -->
+  <header class="bg-white border-b shadow-sm p-4 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <img src="img/logo.png" alt="Logo" class="h-10" />
+      <h1 class="text-xl font-bold text-schwarzgreen">Schwarzes Brett</h1>
     </div>
-<!-- Ergänze in index.html direkt unter dem Header -->
-<section class="mb-8 max-w-3xl mx-auto">
-  <form id="postForm" class="flex flex-col gap-4 p-4 border rounded-lg shadow">
-    <input type="text" id="title" placeholder="Titel" required class="p-2 border rounded" />
-    <textarea id="content" placeholder="Inhalt" required class="p-2 border rounded"></textarea>
-    <input type="date" id="date" required class="p-2 border rounded" />
-    <select id="priority" required class="p-2 border rounded">
-      <option value="" disabled selected>Priorität wählen</option>
-      <option value="high">High</option>
-      <option value="low">Low</option>
-    </select>
-    <button type="submit" class="bg-fichte text-white py-2 rounded hover:bg-fichte/80 transition">Beitrag hinzufügen</button>
-  </form>
-</section>
-<!-- Plus-Button -->
-<button id="toggleFormBtn" 
-  class="fixed bottom-6 right-6 bg-fichte text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg hover:bg-fichte/80 transition z-50">
-  +
-</button>
+    <a href="https://www.schwarz-logistics-group.com/kontakt/" target="_blank" rel="noopener noreferrer">
+  <button class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+    Kontaktieren Sie uns
+  </button>
+</a>
 
-<!-- Eingabemaske (initial versteckt) -->
-<section id="postFormSection" 
-  class="fixed bottom-20 right-6 bg-white p-6 rounded-lg shadow-lg w-80 max-w-full hidden z-50">
-  <form id="postForm" class="flex flex-col gap-4">
-    <input type="text" id="title" placeholder="Titel" required class="p-2 border rounded" />
-    <textarea id="content" placeholder="Inhalt" required class="p-2 border rounded resize-none" rows="3"></textarea>
-    <input type="date" id="date" required class="p-2 border rounded" />
-    <select id="priority" required class="p-2 border rounded">
-      <option value="" disabled selected>Priorität wählen</option>
-      <option value="high">High</option>
-      <option value="low">Low</option>
-    </select>
-    <button type="submit" class="bg-fichte text-white py-2 rounded hover:bg-fichte/80 transition">Beitrag hinzufügen</button>
-  </form>
-</section>
+  </header>
+
+  <!-- Eingabeformular (floating) -->
+  <button id="toggleFormBtn"
+    class="fixed bottom-6 right-6 bg-schwarzgreen text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg hover:bg-schwarzgreen/80 transition z-50">
+    +
+  </button>
+
+  <section id="postFormSection"
+    class="fixed bottom-24 right-6 bg-white p-6 rounded-xl shadow-xl w-80 hidden z-50 border border-gray-200">
+    <form id="postForm" class="flex flex-col gap-3">
+      <input type="text" id="title" placeholder="Titel" required class="p-2 border rounded text-sm" />
+      <textarea id="content" placeholder="Inhalt" required class="p-2 border rounded text-sm resize-none" rows="3"></textarea>
+      <input type="date" id="date" required class="p-2 border rounded text-sm" />
+      <select id="priority" required class="p-2 border rounded text-sm">
+        <option value="" disabled selected>Priorität wählen</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+      </select>
+      <button type="submit"
+        class="bg-schwarzlime text-black font-semibold py-2 rounded hover:bg-lime-400 transition text-sm">Beitrag
+        hinzufügen</button>
+    </form>
+  </section>
+
+  <!-- Hauptbereich -->
+  <main class="flex h-[calc(100vh-80px)] max-w-7xl mx-auto p-6 gap-6">
+    <div id="important" class="flex flex-col flex-1 overflow-auto gap-4"></div>
+    <div id="board" class="flex flex-col flex-2 overflow-auto gap-4"></div>
+  </main>
 
 
-  <script src="app.js"></script>
+
+  <script>
+    // Dummy-Daten laden (data.json ersetzen durch echte API/später)
+    const posts = [
+      { title: "Flohmarkt", content: "Am Samstag ab 9 Uhr im Pausenhof.", date: "28.07.2025" },
+      { title: "Sekretariat", content: "Nur bis 13 Uhr besetzt.", date: "27.07.2025" },
+      { title: "Fundsachen", content: "Schlüssel und Turnbeutel abgegeben.", date: "26.07.2025" },
+    ];
+
+    const important = document.getElementById('important');
+    const board = document.getElementById('board');
+
+    const createImportantCard = (post) => {
+      const div = document.createElement('div');
+      div.className = `bg-schwarzgreen text-white p-4 rounded-xl shadow-md`;
+      div.innerHTML = `
+        <h2 class="text-lg font-semibold mb-1">${post.title}</h2>
+        <p class="text-sm">${post.content}</p>
+        <p class="text-xs mt-2 opacity-80">${post.date}</p>
+      `;
+      return div;
+    };
+
+    const createStandardCard = (post) => {
+      const container = document.createElement('div');
+      container.className = `bg-white border-l-4 border-schwarzgreen p-4 rounded-xl shadow-sm cursor-pointer transition-transform`;
+
+      const fullText = document.createElement('div');
+      fullText.className = 'mt-2 text-sm text-gray-600 max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden';
+      fullText.innerText = post.content;
+
+      container.innerHTML = `
+        <h2 class="text-base font-semibold text-black">${post.title}</h2>
+        <p class="text-xs text-gray-400 mt-1">${post.date}</p>
+      `;
+      container.appendChild(fullText);
+
+      container.addEventListener('click', () => {
+        const expanded = fullText.classList.contains('max-h-0');
+        if (expanded) {
+          fullText.classList.remove('max-h-0', 'opacity-0');
+          fullText.classList.add('max-h-32', 'opacity-100');
+        } else {
+          fullText.classList.add('max-h-0', 'opacity-0');
+          fullText.classList.remove('max-h-32', 'opacity-100');
+        }
+      });
+
+      return container;
+    };
+
+    const [first, second, ...rest] = posts;
+    important.appendChild(createImportantCard(first));
+    important.appendChild(createImportantCard(second));
+    rest.forEach(post => board.appendChild(createStandardCard(post)));
+
+    // Formularsteuerung
+    const toggleBtn = document.getElementById('toggleFormBtn');
+    const formSection = document.getElementById('postFormSection');
+    toggleBtn.addEventListener('click', () => {
+      formSection.classList.toggle('hidden');
+    });
+
+    document.getElementById('postForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const title = e.target.title.value.trim();
+      const content = e.target.content.value.trim();
+      const date = e.target.date.value;
+      const priority = e.target.priority.value;
+      const post = { title, content, date };
+
+      if (priority === 'high') {
+        important.appendChild(createImportantCard(post));
+      } else {
+        board.appendChild(createStandardCard(post));
+      }
+
+      e.target.reset();
+      formSection.classList.add('hidden');
+    });
+  </script>
 </body>
 </html>
