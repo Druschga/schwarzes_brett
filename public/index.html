@@ -81,21 +81,27 @@
         if (expanded) {
           fullText.classList.remove('max-h-0', 'opacity-0');
           fullText.classList.add('max-h-32', 'opacity-100');
+          if (post.pdfUrl) {
+            const pdfLink = document.createElement('a');
+            pdfLink.href = post.pdfUrl;
+            pdfLink.setAttribute('data-pdf', post.pdfUrl);
+            pdfLink.textContent = 'PDF ansehen';
+            pdfLink.className = 'underline text-sm mt-2 block text-schwarzgreen cursor-pointer';
+            fullText.appendChild(pdfLink);
+            pdfLink.addEventListener('click', (e) => {
+              e.stopPropagation();
+            });
+          }
         } else {
           fullText.classList.add('max-h-0', 'opacity-0');
           fullText.classList.remove('max-h-32', 'opacity-100');
+          // Remove pdf link if exists
+          const existingPdfLink = fullText.querySelector('a[data-pdf]');
+          if (existingPdfLink) {
+            existingPdfLink.remove();
+          }
         }
       });
-
-      if (post.pdfUrl) {
-        const pdfLink = document.createElement('a');
-        pdfLink.href = post.pdfUrl;
-        pdfLink.target = '_blank';
-        pdfLink.rel = 'noopener noreferrer';
-        pdfLink.textContent = 'PDF ansehen';
-        pdfLink.className = 'underline text-sm mt-2 block text-schwarzgreen';
-        container.appendChild(pdfLink);
-      }
 
       return container;
     };
@@ -108,6 +114,55 @@
         important.appendChild(createImportantCard(second));
         rest.forEach(post => board.appendChild(createStandardCard(post)));
       });
+  </script>
+
+  <div id="pdfOverlay" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg overflow-hidden w-full max-w-4xl h-[80vh] relative scale-90 opacity-0 transition-all duration-300" id="pdfViewerBox">
+      <button id="closePdfOverlay" class="absolute top-2 left-2 text-black text-xl font-bold">&times;</button>
+      <iframe id="pdfViewer" src="" class="w-full h-full border-0"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('pdfOverlay');
+    const viewer = document.getElementById('pdfViewer');
+    const viewerBox = document.getElementById('pdfViewerBox');
+    const closeBtn = document.getElementById('closePdfOverlay');
+
+    document.body.addEventListener('click', (e) => {
+      if (e.target.matches('[data-pdf]')) {
+        e.preventDefault();
+        viewer.src = e.target.getAttribute('data-pdf');
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+          viewerBox.classList.remove('scale-90', 'opacity-0');
+          viewerBox.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      viewerBox.classList.remove('scale-100', 'opacity-100');
+      viewerBox.classList.add('scale-90', 'opacity-0');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        viewer.src = '';
+      }, 300);
+    });
+
+    // Klick außerhalb schließt Overlay
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        closeBtn.click();
+      }
+    });
+
+    // Escape-Taste schließt Overlay
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
+        closeBtn.click();
+      }
+    });
   </script>
 </body>
 </html>

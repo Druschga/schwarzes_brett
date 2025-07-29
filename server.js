@@ -17,7 +17,7 @@ const upload = multer({ storage });
 
 app.use(express.json());
 app.use(express.static('public'));
-app.use(express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/admin', express.static('admin'));
 
 // Helper: Posts lesen/schreiben
@@ -50,7 +50,7 @@ app.post('/posts', upload.single('pdf'), (req, res) => {
     date: new Date().toISOString().split('T')[0],
   };
   if (req.file) {
-    newPost.pdfUrl = '/' + req.file.filename;
+    newPost.pdfUrl = '/uploads/' + req.file.filename;
   }
 
   posts.push(newPost);

@@ -35,7 +35,7 @@ fetch('data.json')
           <p class="text-xs text-gray-400 mt-2">${post.date}</p>
         `;
         container.addEventListener('click', () => {
-          showPdfModal(post.pdfUrl);
+          // showPdfModal(post.pdfUrl);  // Removed as per instructions
         });
         return container;
       }
@@ -117,40 +117,4 @@ fetch('data.json')
       formSection.classList.toggle('hidden');
     });
 
-    function showPdfModal(url) {
-      const modal = document.getElementById('pdfModal');
-      const iframe = modal.querySelector('iframe');
-      iframe.src = url;
-      modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-      modal.classList.add('opacity-100', 'scale-100');
-    }
-
-    const modalHTML = document.createElement('div');
-    modalHTML.innerHTML = `
-      <div id="pdfModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-all duration-300 opacity-0 scale-95 pointer-events-none z-50">
-        <div class="bg-white rounded-lg overflow-hidden shadow-xl w-11/12 h-5/6 max-w-4xl relative">
-          <button id="closePdfModal" class="absolute top-2 right-2 text-gray-700 hover:text-gray-900 text-2xl font-bold z-50">&times;</button>
-          <iframe class="w-full h-full" frameborder="0"></iframe>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modalHTML);
-
-    const pdfModal = document.getElementById('pdfModal');
-    const closeBtn = document.getElementById('closePdfModal');
-    closeBtn.addEventListener('click', () => {
-      const iframe = pdfModal.querySelector('iframe');
-      iframe.src = '';
-      pdfModal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-      pdfModal.classList.remove('opacity-100', 'scale-100');
-    });
-
-    pdfModal.addEventListener('click', (e) => {
-      if (e.target === pdfModal) {
-        const iframe = pdfModal.querySelector('iframe');
-        iframe.src = '';
-        pdfModal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-        pdfModal.classList.remove('opacity-100', 'scale-100');
-      }
-    });
   });
