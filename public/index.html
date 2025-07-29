@@ -38,29 +38,6 @@
 
   </header>
 
-  <!-- Eingabeformular (floating) -->
-  <button id="toggleFormBtn"
-    class="fixed bottom-6 right-6 bg-schwarzgreen text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg hover:bg-schwarzgreen/80 transition z-50">
-    +
-  </button>
-
-  <section id="postFormSection"
-    class="fixed bottom-24 right-6 bg-white p-6 rounded-xl shadow-xl w-80 hidden z-50 border border-gray-200">
-    <form id="postForm" class="flex flex-col gap-3">
-      <input type="text" id="title" placeholder="Titel" required class="p-2 border rounded text-sm" />
-      <textarea id="content" placeholder="Inhalt" required class="p-2 border rounded text-sm resize-none" rows="3"></textarea>
-      <input type="date" id="date" required class="p-2 border rounded text-sm" />
-      <select id="priority" required class="p-2 border rounded text-sm">
-        <option value="" disabled selected>Priorität wählen</option>
-        <option value="high">High</option>
-        <option value="low">Low</option>
-      </select>
-      <button type="submit"
-        class="bg-schwarzlime text-black font-semibold py-2 rounded hover:bg-lime-400 transition text-sm">Beitrag
-        hinzufügen</button>
-    </form>
-  </section>
-
   <!-- Hauptbereich -->
   <main class="flex h-[calc(100vh-80px)] max-w-7xl mx-auto p-6 gap-6">
     <div id="important" class="flex flex-col flex-1 overflow-auto gap-4"></div>
@@ -70,13 +47,6 @@
 
 
   <script>
-    // Dummy-Daten laden (data.json ersetzen durch echte API/später)
-    const posts = [
-      { title: "Flohmarkt", content: "Am Samstag ab 9 Uhr im Pausenhof.", date: "28.07.2025" },
-      { title: "Sekretariat", content: "Nur bis 13 Uhr besetzt.", date: "27.07.2025" },
-      { title: "Fundsachen", content: "Schlüssel und Turnbeutel abgegeben.", date: "26.07.2025" },
-    ];
-
     const important = document.getElementById('important');
     const board = document.getElementById('board');
 
@@ -86,6 +56,7 @@
       div.innerHTML = `
         <h2 class="text-lg font-semibold mb-1">${post.title}</h2>
         <p class="text-sm">${post.content}</p>
+        ${post.pdfUrl ? `<a href="${post.pdfUrl}" target="_blank" rel="noopener noreferrer" class="underline text-sm mt-2 inline-block">PDF ansehen</a>` : ''}
         <p class="text-xs mt-2 opacity-80">${post.date}</p>
       `;
       return div;
@@ -116,38 +87,27 @@
         }
       });
 
+      if (post.pdfUrl) {
+        const pdfLink = document.createElement('a');
+        pdfLink.href = post.pdfUrl;
+        pdfLink.target = '_blank';
+        pdfLink.rel = 'noopener noreferrer';
+        pdfLink.textContent = 'PDF ansehen';
+        pdfLink.className = 'underline text-sm mt-2 block text-schwarzgreen';
+        container.appendChild(pdfLink);
+      }
+
       return container;
     };
 
-    const [first, second, ...rest] = posts;
-    important.appendChild(createImportantCard(first));
-    important.appendChild(createImportantCard(second));
-    rest.forEach(post => board.appendChild(createStandardCard(post)));
-
-    // Formularsteuerung
-    const toggleBtn = document.getElementById('toggleFormBtn');
-    const formSection = document.getElementById('postFormSection');
-    toggleBtn.addEventListener('click', () => {
-      formSection.classList.toggle('hidden');
-    });
-
-    document.getElementById('postForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const title = e.target.title.value.trim();
-      const content = e.target.content.value.trim();
-      const date = e.target.date.value;
-      const priority = e.target.priority.value;
-      const post = { title, content, date };
-
-      if (priority === 'high') {
-        important.appendChild(createImportantCard(post));
-      } else {
-        board.appendChild(createStandardCard(post));
-      }
-
-      e.target.reset();
-      formSection.classList.add('hidden');
-    });
+    fetch('/posts')
+      .then(res => res.json())
+      .then(posts => {
+        const [first, second, ...rest] = posts;
+        important.appendChild(createImportantCard(first));
+        important.appendChild(createImportantCard(second));
+        rest.forEach(post => board.appendChild(createStandardCard(post)));
+      });
   </script>
 </body>
 </html>
