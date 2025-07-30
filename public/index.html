@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digitales Schwarzes Brett</title>
+  <base href="http://10.12.185.161:3000/">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -56,9 +57,27 @@
       div.innerHTML = `
         <h2 class="text-lg font-semibold mb-1">${post.title}</h2>
         <p class="text-sm">${post.content}</p>
-        ${post.pdfUrl ? `<a href="${post.pdfUrl}" target="_blank" rel="noopener noreferrer" class="underline text-sm mt-2 inline-block">PDF ansehen</a>` : ''}
+        ${post.pdfUrl ? `<a href="#" data-pdf="${post.pdfUrl}" class="pdf-link underline text-sm mt-2 inline-block text-white">PDF ansehen</a>` : ''}
         <p class="text-xs mt-2 opacity-80">${post.date}</p>
       `;
+
+      const pdfLink = div.querySelector('.pdf-link');
+      if (pdfLink) {
+        pdfLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          const overlay = document.getElementById('pdfOverlay');
+          const viewer = document.getElementById('pdfViewer');
+          const viewerBox = document.getElementById('pdfViewerBox');
+
+          viewer.src = post.pdfUrl;
+          overlay.classList.remove('hidden');
+          setTimeout(() => {
+            viewerBox.classList.remove('scale-90', 'opacity-0');
+            viewerBox.classList.add('scale-100', 'opacity-100');
+          }, 10);
+        });
+      }
+
       return div;
     };
 
